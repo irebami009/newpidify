@@ -1,0 +1,472 @@
+/* Floating animation for the entire figure */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* Head bobbing animation with slight tilt */
+@keyframes headFloat {
+  0%, 100% {
+    transform: translateY(0px) rotateZ(0deg);
+  }
+  25% {
+    transform: translateY(-10px) rotateZ(-2deg);
+  }
+  75% {
+    transform: translateY(-10px) rotateZ(2deg);
+  }
+}
+
+/* Hair sway animation */
+@keyframes hairSway {
+  0%, 100% {
+    transform: rotateZ(0deg);
+  }
+  25% {
+    transform: rotateZ(-4deg);
+  }
+  75% {
+    transform: rotateZ(4deg);
+  }
+}
+
+/* Shoulder shrug animation */
+@keyframes shoulder {
+  0%, 100% {
+    transform: translateY(0px) scaleX(1);
+  }
+  50% {
+    transform: translateY(-3px) scaleX(1.05);
+  }
+}
+
+/* Body floating animation */
+@keyframes bodyFloat {
+  0%, 100% {
+    transform: scaleY(1) translateY(0px);
+  }
+  50% {
+    transform: scaleY(1.03) translateY(-2px);
+  }
+}
+
+/* Left arm waving animation */
+@keyframes armLeft {
+  0%, 100% {
+    transform: rotateZ(-25deg);
+  }
+  25% {
+    transform: rotateZ(5deg);
+  }
+  75% {
+    transform: rotateZ(-25deg);
+  }
+}
+
+/* Right arm waving animation */
+@keyframes armRight {
+  0%, 100% {
+    transform: rotateZ(25deg);
+  }
+  25% {
+    transform: rotateZ(-5deg);
+  }
+  75% {
+    transform: rotateZ(25deg);
+  }
+}
+
+/* Left leg animation */
+@keyframes legLeft {
+  0%, 100% {
+    transform: rotateZ(-5deg);
+  }
+  50% {
+    transform: rotateZ(8deg);
+  }
+}
+
+/* Right leg animation */
+@keyframes legRight {
+  0%, 100% {
+    transform: rotateZ(5deg);
+  }
+  50% {
+    transform: rotateZ(-8deg);
+  }
+}
+
+/* Blinking animation */
+@keyframes blink {
+  0%, 90%, 100% {
+    opacity: 1;
+  }
+  95% {
+    opacity: 0;
+  }
+}
+
+/* Enhanced sparkle animation */
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0;
+    r: 1.5;
+  }
+  50% {
+    opacity: 1;
+    r: 3;
+  }
+}
+
+/* Blob animation for background */
+@keyframes blob {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+}
+
+/* Slide down animation for passkey input */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Apply animations */
+.animate-float {
+  animation: float 4.5s ease-in-out infinite;
+}
+
+.animate-head-float {
+  animation: headFloat 3.5s ease-in-out infinite;
+  transform-origin: 100px 60px;
+}
+
+.animate-hair-sway {
+  animation: hairSway 2.5s ease-in-out infinite;
+  transform-origin: 100px 37px;
+}
+
+.animate-shoulder {
+  animation: shoulder 2s ease-in-out infinite;
+  transform-origin: 100px 88px;
+}
+
+.animate-body-float {
+  animation: bodyFloat 3.5s ease-in-out infinite;
+}
+
+.animate-arm-left {
+  animation: armLeft 2.5s ease-in-out infinite;
+}
+
+.animate-arm-right {
+  animation: armRight 2.5s ease-in-out infinite;
+}
+
+.animate-leg-left {
+  animation: legLeft 3s ease-in-out infinite;
+}
+
+.animate-leg-right {
+  animation: legRight 3s ease-in-out infinite;
+}
+
+.animate-blink {
+  animation: blink 3.5s ease-in-out infinite;
+}
+
+.animate-sparkle {
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animate-slideDown {
+  animation: slideDown 0.3s ease-out;
+}
+
+/* Form and container styling */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Ensure no horizontal scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 102, 102, 0.4);
+  border-radius: 4px;
+}
+
+/* Smooth transitions and hover effects */
+input,
+select {
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+input:focus,
+select:focus {
+  transition: all 0.3s ease;
+  box-shadow: 0 0 0 3px rgba(0, 102, 102, 0.1);
+}
+
+input:hover:not(:focus),
+select:hover:not(:focus) {
+  border-color: #006666;
+}
+
+button {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transition: all 0.3s ease;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* Input and select styling */
+input::placeholder,
+select::placeholder {
+  color: #D1D5DB;
+}
+
+/* Backdrop blur support */
+@supports (backdrop-filter: blur(10px)) {
+  .backdrop-blur-sm {
+    backdrop-filter: blur(4px);
+  }
+}
+
+/* ============ RESPONSIVE BREAKPOINTS ============ */
+
+/* Extra Small Devices (< 640px) */
+@media (max-width: 640px) {
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  input, select {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  body {
+    width: 100vw;
+    overflow-x: hidden;
+  }
+
+  main {
+    padding: 0.5rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  p {
+    font-size: 0.75rem;
+  }
+
+  label {
+    font-size: 0.75rem;
+  }
+
+  button {
+    font-size: 0.75rem;
+  }
+
+  /* Responsive background blobs */
+  .bg-\[#00a3a3\],
+  .bg-\[#0099cc\] {
+    width: 12rem !important;
+    height: 12rem !important;
+  }
+}
+
+/* Small Devices (640px - 768px) */
+@media (min-width: 640px) and (max-width: 768px) {
+  .animate-float {
+    animation: float 3.5s ease-in-out infinite;
+  }
+
+  /* Responsive background blobs */
+  .bg-\[#00a3a3\],
+  .bg-\[#0099cc\] {
+    width: 16rem !important;
+    height: 16rem !important;
+  }
+}
+
+/* Medium Devices (768px - 1024px) */
+@media (min-width: 768px) {
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+
+  /* Responsive background blobs */
+  .bg-\[#00a3a3\],
+  .bg-\[#0099cc\] {
+    width: 16rem !important;
+    height: 16rem !important;
+  }
+}
+
+/* Large Devices (1024px+) */
+@media (min-width: 1024px) {
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+
+  /* Responsive background blobs */
+  .bg-\[#00a3a3\],
+  .bg-\[#0099cc\] {
+    width: 24rem !important;
+    height: 24rem !important;
+  }
+}
+
+/* Very Large Devices (1280px+) */
+@media (min-width: 1280px) {
+  .animate-float {
+    animation: float 4.5s ease-in-out infinite;
+  }
+
+  /* Responsive background blobs */
+  .bg-\[#00a3a3\],
+  .bg-\[#0099cc\] {
+    width: 24rem !important;
+    height: 24rem !important;
+  }
+}
+
+/* Extra Large Devices (1536px+) */
+@media (min-width: 1536px) {
+  .animate-float {
+    animation: float 5s ease-in-out infinite;
+  }
+
+  /* Responsive background blobs */
+  .bg-\[#00a3a3\],
+  .bg-\[#0099cc\] {
+    width: 24rem !important;
+    height: 24rem !important;
+  }
+}
+
+/* Landscape orientation adjustments */
+@media (orientation: landscape) and (max-height: 600px) {
+  main {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}
+
+/* Prevent horizontal scrollbar on any device */
+.min-h-screen {
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Touch-friendly button sizing */
+@media (hover: none) and (pointer: coarse) {
+  button,
+  input,
+  select {
+    min-height: 44px;
+  }
+}
+
+/* Responsive arrow sizing */
+@media (max-width: 640px) {
+  svg[width="40"] {
+    width: 32px !important;
+    height: 32px !important;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1024px) {
+  svg[width="40"] {
+    width: 36px !important;
+    height: 36px !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  svg[width="40"] {
+    width: 40px !important;
+    height: 40px !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  .animate-float,
+  .animate-bounce,
+  .animate-blob {
+    animation: none;
+  }
+}
+
+/* Accessibility: Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-head-float,
+  .animate-hair-sway,
+  .animate-shoulder,
+  .animate-body-float,
+  .animate-arm-left,
+  .animate-arm-right,
+  .animate-leg-left,
+  .animate-leg-right,
+  .animate-blink,
+  .animate-sparkle,
+  .animate-blob,
+  .animate-slideDown {
+    animation: none !important;
+  }
+
+  * {
+    transition: none !important;
+  }
+}
+

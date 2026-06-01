@@ -1,0 +1,19 @@
+import React from "react";
+import FpasSidebar from "../../component/FpasSidebar";
+import LevelMicro2 from "../../component/Course Materials/Micro-Biology Dept/LevelMicro2";
+
+const MicroBiology2 = () => {
+  return (
+    <div className="flex min-h-screen bg-gray-100">
+      {/* Sidebar Section */}
+      <FpasSidebar />
+
+      {/* Main Content Section */}
+      <div className="flex-1 p-6 md:ml-64 md:p-8 overflow-y-auto">
+        <LevelMicro2 />
+      </div>
+    </div>
+  );
+};
+
+export default MicroBiology2;
