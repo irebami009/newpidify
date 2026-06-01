@@ -33,7 +33,7 @@ import MicroBiologyPq2 from './Pages/Micro-Biology/MicroBiologyPq2';
 import MicroBiologyPq3 from './Pages/Micro-Biology/MicroBiologyPq3';
 import MicroBiologyPq4 from './Pages/Micro-Biology/MicroBiologyPq4';
 import FpasDashboard from './Pages/Dashboard/Fpas/FpasDashboard';
-import FsmsDashboard from './Pages/Dashboard/Fsms/FsmsDashBoard';
+import FsmsDashboard from './Pages/Dashboard/Fsms/FsmsDashboard';
 import Timetables from './Pages/Timetables';
 import AnnouncementFpas from './Pages/AnnouncementFpas';
 import AnnouncementFsms from './Pages/AnnouncementFsms';
