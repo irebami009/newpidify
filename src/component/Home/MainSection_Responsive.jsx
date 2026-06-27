@@ -171,7 +171,7 @@ const MainSection = () => {
             <p className="text-sm sm:text-base md:text-lg lg:text-xl text-[#919191] mb-4 sm:mb-5 md:mb-6 px-4">excel in their journey</p>
 
             {/* CTA Link */}
-            <a href="/register" className="flex items-center justify-center text-center px-4 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 bg-[#005366] text-white text-sm sm:text-base md:text-lg shadow-lg rounded-full gap-2 sm:gap-3 hover:bg-[#006666] hover:shadow-2xl transition-all duration-300 font-bold">
+            <a href="/register" className="flex items-center justify-center text-center px-4 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 bg-[#005366] text-sm sm:text-base md:text-lg shadow-lg rounded-full gap-2 sm:gap-3 hover:bg-[#006666] hover:shadow-2xl transition-all duration-300 font-bold">
               Create a free account
               <img className="w-4 sm:w-5" src="/Images/readyicon.png" alt="Ready Icon" />
             </a>

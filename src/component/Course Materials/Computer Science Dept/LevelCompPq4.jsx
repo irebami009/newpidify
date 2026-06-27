@@ -117,10 +117,19 @@ const LevelCompPq4 = () => {
 
   // ================= FETCH FILES =================
   useEffect(() => {
-    fetch("http://localhost/pidify/pidify/getFiles.php?level=400&type=pq_comp")
-      .then((res) => res.json())
-      .then((data) => setFiles(data))
-      .catch((err) => console.error(err));
+    const fetchFiles = async () => {
+      try {
+        const res = await fetch("http://localhost/pidify/pidify/getFiles.php?level=400&type=pq_comp");
+        const data = await res.json();
+        setFiles(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchFiles();
+    const interval = setInterval(fetchFiles, 2000);
+    return () => clearInterval(interval);
   }, []);
 
   const getAllUsers = async () => {

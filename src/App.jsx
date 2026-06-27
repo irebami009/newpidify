@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Toaster } from 'react-hot-toast';
 import { UserProvider } from "./context/UserContext";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import SplashScreen from './SplashScreen';
 import Homepage from './Pages/Homepage'
 import PastQuestions from './Pages/PastQuestions'
@@ -64,9 +64,12 @@ import AccountingPdf from './Pages/Accounting/AccountingPdf';
 import AccountingPq from './Pages/Accounting/AccountingPq';
 import EconomicsPdf from './Pages/Economics/EconomicsPdf';
 import EconomicsPq from './Pages/Economics/EconomicsPq';
+import Settings from './Pages/Settings/Settings';
+import { applyTheme, getStoredTheme, THEME_EVENT } from './utils/theme';
 
 const App = () => {
   const [showSplash, setShowSplash] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -75,6 +78,43 @@ const App = () => {
 
     return () => clearTimeout(timer);
   }, []);
+
+  // Apply theme on mount
+  useEffect(() => {
+    try {
+      const savedTheme = localStorage.getItem("app_theme") || "light";
+      const root = document.documentElement;
+      if (savedTheme === "dark") {
+        root.classList.add("dark");
+      } else if (savedTheme === "light") {
+        root.classList.remove("dark");
+      } else {
+        const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (systemDark) root.classList.add("dark");
+        else root.classList.remove("dark");
+      }
+    } catch (e) {
+      console.error("Error loading theme", e);
+    }
+  }, []);
+
+  // Apply the saved theme globally, including route changes and system mode updates.
+  useEffect(() => {
+    const syncTheme = () => applyTheme(getStoredTheme());
+    const systemTheme = window.matchMedia?.("(prefers-color-scheme: dark)");
+
+    syncTheme();
+
+    window.addEventListener(THEME_EVENT, syncTheme);
+    window.addEventListener("storage", syncTheme);
+    systemTheme?.addEventListener("change", syncTheme);
+
+    return () => {
+      window.removeEventListener(THEME_EVENT, syncTheme);
+      window.removeEventListener("storage", syncTheme);
+      systemTheme?.removeEventListener("change", syncTheme);
+    };
+  }, [location.pathname]);
 
   if (showSplash) {
     return <SplashScreen />;
@@ -89,6 +129,7 @@ const App = () => {
         <Route path='/quiz' element={<Quiz />} />
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
+        <Route path='/settings' element={<Settings />} />
       
         {/* fpas */}
          <Route path="/dashboard/fpas" element={<FpasDashboard />} />

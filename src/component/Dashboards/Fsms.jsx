@@ -15,27 +15,82 @@ import { onAuthStateChanged } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const Fsms = () => {
-  const [studentName, setStudentName] = useState(
-    localStorage.getItem("fsms_studentName") || "Student"
-  );
-  const [profilePicture, setProfilePicture] = useState(
-    localStorage.getItem("fsms_profilePicture") || ""
-  );
+  const [studentName, setStudentName] = useState(() => {
+    try {
+      const localUser = localStorage.getItem("user");
+      if (localUser) {
+        const parsed = JSON.parse(localUser);
+        return parsed.fullname || "Student";
+      }
+    } catch (e) {
+      console.error("Error parsing local user", e);
+    }
+    return "Student";
+  });
+  const [profilePicture, setProfilePicture] = useState(() => {
+    try {
+      const localUser = localStorage.getItem("user");
+      if (localUser) {
+        const parsed = JSON.parse(localUser);
+        return parsed.profile_picture || localStorage.getItem(`profile_pic_${parsed.id}`) || "";
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return "";
+  });
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
   const fileInputRef = useRef(null);
 
+  // Storage listener to update name and profile picture in real-time
+  useEffect(() => {
+    const handleStorage = () => {
+      try {
+        const localUserStr = localStorage.getItem("user");
+        if (localUserStr) {
+          const data = JSON.parse(localUserStr);
+          if (data) {
+            setStudentName(data.fullname || "Student");
+            setProfilePicture(data.profile_picture || localStorage.getItem(`profile_pic_${data.id}`) || "");
+          }
+        }
+      } catch (e) {
+        console.error("Storage sync error", e);
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, []);
+
   // ================= USER DATA =================
   useEffect(() => {
+    const localUserStr = localStorage.getItem("user");
+    if (localUserStr) {
+      try {
+        const data = JSON.parse(localUserStr);
+        if (data && data.fullname) {
+          if ((data.faculty || "").toLowerCase() !== "fsms") {
+            window.location.href = "/login";
+            return;
+          }
+          setStudentName(data.fullname);
+          const pic = data.profile_picture || localStorage.getItem(`profile_pic_${data.id}`) || "";
+          setProfilePicture(pic);
+          return;
+        }
+      } catch (error) {
+        console.error("Local user fetch error:", error);
+      }
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       try {
         if (!user) {
           setStudentName("Student");
           setProfilePicture("");
-          localStorage.removeItem("fsms_studentName");
-          localStorage.removeItem("fsms_profilePicture");
           return;
         }
 
@@ -50,9 +105,6 @@ const Fsms = () => {
 
           setStudentName(name);
           setProfilePicture(picture);
-
-          localStorage.setItem("fsms_studentName", name);
-          localStorage.setItem("fsms_profilePicture", picture);
         } else {
           setStudentName("Student");
           setProfilePicture("");
@@ -109,6 +161,37 @@ const Fsms = () => {
       const file = e.target.files[0];
       if (!file) return;
 
+      const localUserStr = localStorage.getItem("user");
+      if (localUserStr) {
+        try {
+          const localUser = JSON.parse(localUserStr);
+          const formData = new FormData();
+          formData.append("userId", localUser.id);
+          formData.append("avatar", file);
+
+          const response = await fetch("http://localhost/pidify/pidify/auth/upload_avatar.php", {
+            method: "POST",
+            body: formData,
+          });
+
+          const result = await response.json();
+          if (result.status === "success") {
+            const updatedUser = { ...localUser, profile_picture: result.profile_picture };
+            localStorage.setItem("user", JSON.stringify(updatedUser));
+            setProfilePicture(result.profile_picture);
+            toast.success("Profile picture updated!");
+            window.dispatchEvent(new Event("storage"));
+          } else {
+            toast.error(result.message || "Failed to upload picture.");
+          }
+          return;
+        } catch (err) {
+          console.error("PHP profile pic save error:", err);
+          toast.error("Failed to upload profile picture.");
+          return;
+        }
+      }
+
       const user = auth.currentUser;
       if (!user) return;
 
@@ -123,9 +206,10 @@ const Fsms = () => {
       });
 
       setProfilePicture(url);
-      localStorage.setItem("fsms_profilePicture", url);
+      toast.success("Profile picture updated!");
     } catch (error) {
       console.error("UPLOAD ERROR:", error);
+      toast.error("Failed to upload profile picture.");
     }
   };
 
@@ -190,7 +274,7 @@ const Fsms = () => {
             {/* USER */}
             <div className="flex items-center gap-2 md:gap-3">
               <span className="text-gray-700 font-medium text-sm md:text-base">
-                Hi, {studentName} 👋
+                Hi, {studentName} 
               </span>
 
               <div
@@ -222,7 +306,7 @@ const Fsms = () => {
         <main className="flex-1 flex flex-col p-4 md:p-8 overflow-x-hidden overflow-y-auto w-full min-w-0">
           <section className="bg-white rounded-2xl shadow-md p-6 md:p-8 mb-8">
             <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
-              Welcome back, {studentName}! 👋
+              Welcome back, {studentName}! 
             </h1>
 
             <p className="text-gray-600">

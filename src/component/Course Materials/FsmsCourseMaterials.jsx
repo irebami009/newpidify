@@ -108,13 +108,22 @@ const FsmsCourseMaterials = ({
 
   useEffect(() => {
     const fetchType = `${materialType === "pdf" ? "pdf" : "pq"}_${courseSlug}`;
-    fetch(`http://localhost/pidify/pidify/getFiles.php?level=${normalizedLevel}&type=${fetchType}`)
-      .then((res) => res.json())
-      .then((data) => setFiles(data || []))
-      .catch((err) => {
+    const fetchFiles = async () => {
+      try {
+        const res = await fetch(`http://localhost/pidify/pidify/getFiles.php?level=${normalizedLevel}&type=${fetchType}`);
+        const data = await res.json();
+        setFiles(data || []);
+      } catch (err) {
         console.error(err);
         setFiles([]);
-      });
+      }
+    };
+
+    fetchFiles();
+
+    const interval = setInterval(fetchFiles, 2000);
+
+    return () => clearInterval(interval);
   }, [normalizedLevel, courseSlug, materialType]);
 
   const getAllUsers = async () => {
@@ -239,10 +248,6 @@ const FsmsCourseMaterials = ({
                 </div>
               )}
             </div>
-            <label className="cursor-pointer flex items-center justify-center rounded-full bg-gray-100 w-10 h-10 hover:bg-gray-200">
-              <div className="text-2xl text-gray-600">➕</div>
-              <input type="file" multiple onChange={handleFileChange} className="hidden" />
-            </label>
             <div className="flex items-center gap-2 md:gap-3">
               <span className="text-gray-700 font-medium text-sm md:text-base">Hi, {studentName} 👋</span>
               <div
@@ -289,6 +294,11 @@ const FsmsCourseMaterials = ({
             ))}
           </nav>
           <main className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <label className="cursor-pointer bg-white rounded-2xl shadow-md p-6 flex flex-col items-center justify-center border-dashed border-2 border-gray-300 hover:border-gray-400 transition">
+              <div className="text-4xl text-gray-400 mb-2">➕</div>
+              <p className="text-gray-500">Add File</p>
+              <input type="file" multiple onChange={handleFileChange} className="hidden" />
+            </label>
             {filteredFiles.map((file) => (
               <div key={file.id || file.name} className="bg-white rounded-2xl shadow-md p-4 text-center relative">
                 <button onClick={() => handleDelete(file)} className="absolute top-2 right-2 text-red-500 font-bold">✖</button>

@@ -32,12 +32,6 @@ const AdminDashboard = () => {
         {/* Navbar */}
         <header className="flex items-center justify-between bg-white shadow-md px-4 py-4 md:px-8">
           <div className="flex items-center gap-4">
-            <button
-              className="md:hidden"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-            >
-              <Menu className="w-6 h-6 text-gray-700" />
-            </button>
             <h1 className="text-xl md:text-2xl font-semibold text-gray-700">
               Admin Dashboard
             </h1>
@@ -57,6 +51,13 @@ const AdminDashboard = () => {
                 <User className="w-4 h-4 md:w-5 md:h-5 text-gray-600" />
               </div>
             </div>
+
+            <button
+              className="md:hidden"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+            >
+              <Menu className="w-6 h-6 text-gray-700" />
+            </button>
           </div>
         </header>
 

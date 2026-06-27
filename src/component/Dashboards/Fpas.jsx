@@ -15,8 +15,30 @@ import { onAuthStateChanged } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const Fpas = () => {
-  const [studentName, setStudentName] = useState("");
-  const [profilePicture, setProfilePicture] = useState("");
+  const [studentName, setStudentName] = useState(() => {
+    try {
+      const localUser = localStorage.getItem("user");
+      if (localUser) {
+        const parsed = JSON.parse(localUser);
+        return parsed.fullname || "";
+      }
+    } catch (e) {
+      console.error("Error parsing local user", e);
+    }
+    return "";
+  });
+  const [profilePicture, setProfilePicture] = useState(() => {
+    try {
+      const localUser = localStorage.getItem("user");
+      if (localUser) {
+        const parsed = JSON.parse(localUser);
+        return parsed.profile_picture || localStorage.getItem(`profile_pic_${parsed.id}`) || "";
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return "";
+  });
   const [loading, setLoading] = useState(true);
 
   const [notifications, setNotifications] = useState([]);
@@ -25,8 +47,49 @@ const Fpas = () => {
 
   const fileInputRef = useRef(null);
 
+  // Storage listener to update name and profile picture in real-time
+  useEffect(() => {
+    const handleStorage = () => {
+      try {
+        const localUserStr = localStorage.getItem("user");
+        if (localUserStr) {
+          const data = JSON.parse(localUserStr);
+          if (data) {
+            setStudentName(data.fullname || "");
+            setProfilePicture(data.profile_picture || localStorage.getItem(`profile_pic_${data.id}`) || "");
+          }
+        }
+      } catch (e) {
+        console.error("Storage sync error", e);
+      }
+    };
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, []);
+
   // ================= AUTH + USER DATA =================
   useEffect(() => {
+    const localUserStr = localStorage.getItem("user");
+    if (localUserStr) {
+      try {
+        const data = JSON.parse(localUserStr);
+        if (data && data.fullname) {
+          // ✅ PRODUCTION SAFE FACULTY CHECK
+          if ((data.faculty || "").toLowerCase() !== "fpas") {
+            window.location.href = "/login"; // redirect if wrong faculty
+            return;
+          }
+          setStudentName(data.fullname);
+          const pic = data.profile_picture || localStorage.getItem(`profile_pic_${data.id}`) || "";
+          setProfilePicture(pic);
+          setLoading(false);
+          return;
+        }
+      } catch (error) {
+        console.error("Local user fetch error:", error);
+      }
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (!user) {
         setLoading(false);
@@ -102,6 +165,37 @@ const Fpas = () => {
     const file = e.target.files[0];
     if (!file) return;
 
+    const localUserStr = localStorage.getItem("user");
+    if (localUserStr) {
+      try {
+        const localUser = JSON.parse(localUserStr);
+        const formData = new FormData();
+        formData.append("userId", localUser.id);
+        formData.append("avatar", file);
+
+        const response = await fetch("http://localhost/pidify/pidify/auth/upload_avatar.php", {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await response.json();
+        if (result.status === "success") {
+          const updatedUser = { ...localUser, profile_picture: result.profile_picture };
+          localStorage.setItem("user", JSON.stringify(updatedUser));
+          setProfilePicture(result.profile_picture);
+          toast.success("Profile picture updated!");
+          window.dispatchEvent(new Event("storage"));
+        } else {
+          toast.error(result.message || "Failed to upload picture.");
+        }
+        return;
+      } catch (err) {
+        console.error("PHP profile pic save error:", err);
+        toast.error("Failed to upload profile picture.");
+        return;
+      }
+    }
+
     const user = auth.currentUser;
     if (!user) return;
 
@@ -118,8 +212,10 @@ const Fpas = () => {
       });
 
       setProfilePicture(url);
+      toast.success("Profile picture updated!");
     } catch (error) {
       console.error("Upload error:", error);
+      toast.error("Failed to upload profile picture.");
     }
   };
 
@@ -196,7 +292,7 @@ const Fpas = () => {
             {/* USER */}
             <div className="flex items-center gap-2 md:gap-3">
               <span className="text-gray-700 font-medium text-sm md:text-base">
-                Hi, {studentName} 👋
+                Hi, {studentName} 
               </span>
 
               <div
@@ -231,7 +327,7 @@ const Fpas = () => {
 
           <section className="bg-white rounded-2xl shadow-md p-6 md:p-8 mb-8">
             <h1 className="text-2xl md:text-2xl font-bold text-gray-800 mb-2">
-              Welcome back, {studentName}! 👋
+              Welcome back, {studentName}! 
             </h1>
 
             <p className="text-gray-600">

@@ -1,48 +1,69 @@
 import React from 'react';
+import { Facebook, Instagram, Mail, ShieldCheck } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const IntroFooter = () => {
   return (
     <footer className="bg-[#071212] text-white">
-      {/* Footer Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-8 sm:py-12 border-b border-[#ffffff33]">
-        <div className="flex flex-col sm:flex-row justify-between items-start gap-6 sm:gap-12">
-        
-          {/* Left Side - Description & Icons */}
-          <div className="flex flex-col items-start max-w-md">
-            <p className="text-sm sm:text-base mb-1">Built for university students by students.</p>
-            <p className="text-sm sm:text-base mb-4">Your one-stop platform for academic excellence.</p>
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-12">
+        <div className="grid gap-10 border-b border-white/10 pb-10 md:grid-cols-[1.2fr_0.8fr_0.8fr]">
+          <div>
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#006666]">
+                <ShieldCheck size={21} />
+              </span>
+              <span className="text-2xl font-black">PDIFY</span>
+            </div>
+            <p className="mt-4 max-w-md text-sm leading-6 text-white/70">
+              Built for university students by students. One place for academic resources, past questions, quizzes, and faculty updates.
+            </p>
 
-            {/* Social Icons */}
-            <div className="flex gap-5">
-              <img className="w-5 sm:w-6 h-5 sm:h-6" src="/Images/footericon1.png" alt="Icon 1" />
-              <img className="w-5 sm:w-6 h-5 sm:h-6" src="/Images/footericon1.png" alt="Icon 2" />
-              <img className="w-5 sm:w-6 h-5 sm:h-6" src="/Images/footericon1.png" alt="Icon 3" />
+            <div className="mt-5 flex gap-3">
+              {[
+                { icon: Instagram, label: 'Instagram' },
+                { icon: Facebook, label: 'Facebook' },
+                { icon: Mail, label: 'Email' },
+              ].map((item) => {
+                const Icon = item.icon;
+                return (
+                  <a
+                    key={item.label}
+                    href="#"
+                    className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 text-white/70 transition hover:border-[#9dd8cf] hover:text-[#9dd8cf]"
+                    aria-label={item.label}
+                  >
+                    <Icon size={18} />
+                  </a>
+                );
+              })}
             </div>
           </div>
-          {/* end of left side */}
 
-          {/* Right Side - Links */}
-          <div className="flex flex-col sm:flex-row gap-8 sm:gap-12 md:gap-16 w-full sm:w-auto">
-            {/* Column 1 */}
-            <div className="flex flex-col gap-2 sm:gap-3">
-              <a href="/" className="text-sm sm:text-base hover:underline">Resources</a>
-              <a href="/past-questions" className="text-sm sm:text-base hover:underline">Past Questions</a>
-              <a href="/quiz" className="text-sm sm:text-base hover:underline">Quizzes</a>
-            </div>
-
-            {/* Column 2 */}
-            <div className="flex flex-col gap-2 sm:gap-3">
-              <a href="#" className="text-sm sm:text-base hover:underline">Academic Integrity</a>
-              <a href="#" className="text-sm sm:text-base hover:underline">FAQs</a>
-              <a href="#" className="text-sm sm:text-base hover:underline">Privacy Policy</a>
-              <a href="#" className="text-sm sm:text-base hover:underline">T&C</a>
+          <div>
+            <h3 className="text-sm font-black uppercase text-[#9dd8cf]">Explore</h3>
+            <div className="mt-4 flex flex-col gap-3 text-sm text-white/70">
+              <Link className="transition hover:text-white" to="/">Resources</Link>
+              <Link className="transition hover:text-white" to="/past-questions">Past Questions</Link>
+              <Link className="transition hover:text-white" to="/quiz">Quizzes</Link>
+              <Link className="transition hover:text-white" to="/login">Log in</Link>
             </div>
           </div>
-          {/* end of right side */}
+
+          <div>
+            <h3 className="text-sm font-black uppercase text-[#9dd8cf]">Support</h3>
+            <div className="mt-4 flex flex-col gap-3 text-sm text-white/70">
+              <a href="#" className="transition hover:text-white">Academic Integrity</a>
+              <a href="#" className="transition hover:text-white">FAQs</a>
+              <a href="#" className="transition hover:text-white">Privacy Policy</a>
+              <a href="#" className="transition hover:text-white">Terms</a>
+            </div>
+          </div>
         </div>
+
+        <p className="pt-6 text-center text-xs text-white/45 sm:text-sm">
+          Copyright 2025 PDIFY. Powered by SamyTech Digital Concept.
+        </p>
       </div>
-      {/* end of footer */}
-      <p className="text-center text-xs sm:text-sm text-[#656C6C] py-4 sm:py-6 px-4">© 2025 PDIFY. Powered by SamyTech Digital Concept.</p>
     </footer>
   );
 };

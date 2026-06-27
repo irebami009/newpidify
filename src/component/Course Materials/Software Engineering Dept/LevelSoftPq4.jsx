@@ -110,10 +110,19 @@ const LevelSoftPq4 = () => {
   const handleIconClick = () => fileInputRef.current?.click();
 
   useEffect(() => {
-    fetch("http://localhost/pidify/pidify/getFiles.php?level=400&type=pq_soft")
-      .then((res) => res.json())
-      .then((data) => setFiles(data))
-      .catch((err) => console.error(err));
+    const fetchFiles = async () => {
+      try {
+        const res = await fetch("http://localhost/pidify/pidify/getFiles.php?level=400&type=pq_soft");
+        const data = await res.json();
+        setFiles(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchFiles();
+    const interval = setInterval(fetchFiles, 2000);
+    return () => clearInterval(interval);
   }, []);
 
   const getAllUsers = async () => {
